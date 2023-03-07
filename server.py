@@ -40,7 +40,7 @@ def gen_summary():
 
 
 @app.route("/save", methods=["POST"])
-def save():
+def save_():
     save()
 
 
