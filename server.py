@@ -30,7 +30,15 @@ CORS(app)
 @app.route("/gen_msg", methods=["POST"])
 def gen_msg():
     msg = request.data.decode("utf-8")
-    return manager.gen_msg({"role": "user", "content": msg}).content
+
+    if manager.self_check_dry():
+        save()
+
+    if msg == "s":
+        save()
+        return "OK"
+    else:
+        return manager.gen_msg({"role": "user", "content": msg}).content
 
 
 @app.route("/gen_summary", methods=["POST"])
