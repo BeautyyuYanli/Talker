@@ -37,11 +37,13 @@ def gen_msg():
 def gen_summary():
     manager.summary_msg = manager.gen_summary()
     save()
+    return 200, "OK"
 
 
 @app.route("/save", methods=["POST"])
 def save_():
     save()
+    return 200, "OK"
 
 
 @app.route("/echo", methods=["POST"])
