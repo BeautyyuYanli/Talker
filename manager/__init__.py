@@ -1,12 +1,21 @@
 import openai
 import os
+import json
+import time
 
 
 class Manager:
-    def __init__(self, api_key: str, prefix_msg: list, summary_msg: dict | None = None) -> None:
+    def __init__(self, api_key: str, prefix_msg_path: str, summary_msg_path: str, save_msg_path: str) -> None:
         openai.api_key = api_key
-        self.prefix_msg = prefix_msg
-        self.summary_msg = summary_msg
+        with open(prefix_msg_path, "r") as f:
+            self.prefix_msg = json.load(f)
+        self.summary_msg_path = summary_msg_path
+        with open(summary_msg_path, "r") as f:
+            try:
+                self.summary_msg = json.load(f)
+            except:
+                self.summary_msg = None
+        self.save_msg_path = save_msg_path
         self.msg = []
         self.last_completion = None
         self.max_token = 3072
@@ -20,8 +29,8 @@ class Manager:
         return completion
 
     def get_full_msg(self) -> dict:
-        full_msg = ([self.summary_msg] if self.summary_msg else []) + \
-            self.prefix_msg + self.msg
+        full_msg = self.prefix_msg + \
+            ([self.summary_msg] if self.summary_msg else []) + self.msg
         return full_msg
 
 # public:
@@ -29,36 +38,57 @@ class Manager:
     def gen_summary(self) -> dict:
         msg = {
             "role": "system",
-            "content": "以第一人称总结以上对话"
+            "content": "以第一人称总结以上内容"
         }
         self.msg.append(msg)
-        completion = self.gen_completion()
+        while True:
+            try:
+                completion = self.gen_completion()
+                break
+            except:
+                time.sleep(3)
+                continue
+
         self.msg.pop()
         return completion.choices[0].message
+
+    def set_summary(self, summary_msg: dict):
+        self.summary_msg = summary_msg
+        self.summary_msg["role"] = "system"
+        self.summary_msg["content"] = "你刚才所做的总结：" + self.summary_msg["content"]
 
     # check token usage, if overflow, trim and return True
     def self_check(self) -> bool:
         if self.last_completion is None:
             return False
+        print(self.last_completion.usage.total_tokens)
         if self.last_completion.usage.total_tokens > self.max_token:
-            self.summary_msg = self.gen_summary()
-            self.msg = []
-            return True
 
-    def self_check_dry(self) -> bool:
-        if self.last_completion is None:
-            return False
-        if self.last_completion.usage.total_tokens > self.max_token:
             return True
+        else:
+            return False
+
+    def save(self):
+        with open(self.save_msg_path, "a") as f:
+            for msg in self.get_msg():
+                f.write(json.dumps(msg) + "\n")
+        with open(self.summary_msg_path, "w") as f:
+            f.write(json.dumps(self.get_summary()))
 
     def gen_msg(self, msg: dict) -> dict:
         check = self.self_check()
         if check:
+            self.set_summary(self.gen_summary())
+            self.save()
+            self.msg = []
             print(2, "Made summary")
         self.msg.append(msg)
-        completion = self.gen_completion()
-        msg = completion.choices[0].message
-        self.msg.append(msg)
+        try:
+            completion = self.gen_completion()
+            msg = completion.choices[0].message
+            self.msg.append(msg)
+        except Exception as e:
+            msg = {"role": "program", "content": e}
         return msg
 
     def get_msg(self) -> list:

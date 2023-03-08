@@ -3,25 +3,9 @@ from manager import Manager
 from flask import Flask, request
 from flask_cors import CORS
 import os
-import json
 
-with open("prefix.json", "r") as f:
-    prefix_msg = json.load(f)
-with open("summary.json", "r") as f:
-    summary_msg = json.load(f)
 manager = Manager(os.getenv("OPENAI_API_KEY"),
-                  prefix_msg, summary_msg=summary_msg)
-
-
-def save():
-    with open("save.jsonl", "a") as f:
-        for msg in manager.get_msg():
-            f.write(json.dumps(msg) + "\n")
-    with open("summary.json", "w") as f:
-        print(type(manager.get_summary()))
-        f.write(json.dumps(manager.get_summary()))
-    print("saved.")
-
+                  prefix_msg_path="save/meow/prefix.json", summary_msg_path="save/meow/summary.json", save_msg_path="save/meow/save.jsonl")
 
 app = Flask(__name__, static_url_path="/dist")
 CORS(app)
@@ -30,27 +14,19 @@ CORS(app)
 @app.route("/gen_msg", methods=["POST"])
 def gen_msg():
     msg = request.data.decode("utf-8")
-
-    if manager.self_check_dry():
-        save()
-
-    if msg == "s":
-        save()
-        return "OK"
-    else:
-        return manager.gen_msg({"role": "user", "content": msg}).content
+    return manager.gen_msg({"role": "user", "content": msg}).content
 
 
-@app.route("/gen_summary", methods=["POST"])
-def gen_summary():
-    manager.summary_msg = manager.gen_summary()
-    save()
+@app.route("/save_with_summary", methods=["POST"])
+def save_with_summary():
+    manager.set_summary(manager.gen_summary())
+    manager.save()
     return "OK"
 
 
 @app.route("/save", methods=["POST"])
-def save_():
-    save()
+def save():
+    manager.save()
     return "OK"
 
 
