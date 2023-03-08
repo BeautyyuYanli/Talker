@@ -29,8 +29,8 @@ class Manager:
         return completion
 
     def get_full_msg(self) -> dict:
-        full_msg = self.prefix_msg + \
-            ([self.summary_msg] if self.summary_msg else []) + self.msg
+        full_msg = ([self.summary_msg] if self.summary_msg else []) + \
+            self.prefix_msg + self.msg
         return full_msg
 
 # public:
