@@ -1,6 +1,4 @@
 __pycache__/
 .env
-save.jsonl
-prefix.json
-summary.json
+save/*
 start.sh

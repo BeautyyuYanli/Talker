@@ -5,10 +5,12 @@ import time
 
 
 class Manager:
-    def __init__(self, api_key: str, prefix_msg_path: str, summary_msg_path: str, save_msg_path: str) -> None:
+    def __init__(self, api_key: str, prefix_msg_path: str, suffix_msg_path: str, summary_msg_path: str, save_msg_path: str) -> None:
         openai.api_key = api_key
         with open(prefix_msg_path, "r") as f:
             self.prefix_msg = json.load(f)
+        with open(suffix_msg_path, "r") as f:
+            self.suffix_msg = json.load(f)
         self.summary_msg_path = summary_msg_path
         with open(summary_msg_path, "r") as f:
             try:
@@ -29,8 +31,9 @@ class Manager:
         return completion
 
     def get_full_msg(self) -> dict:
-        full_msg = ([self.summary_msg] if self.summary_msg else []) + \
-            self.prefix_msg + self.msg
+        full_msg = self.prefix_msg + \
+            ([self.summary_msg] if self.summary_msg else []) + \
+            self.msg + self.suffix_msg
         return full_msg
 
 # public:

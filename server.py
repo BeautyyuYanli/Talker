@@ -5,7 +5,7 @@ from flask_cors import CORS
 import os
 
 manager = Manager(os.getenv("OPENAI_API_KEY"),
-                  prefix_msg_path="save/meow/prefix.json", summary_msg_path="save/meow/summary.json", save_msg_path="save/meow/save.jsonl")
+                  prefix_msg_path="save/meow/prefix.json", suffix_msg_path="save/meow/suffix.json", summary_msg_path="save/meow/summary.json", save_msg_path="save/meow/save.jsonl")
 
 app = Flask(__name__, static_url_path="/dist")
 CORS(app)
