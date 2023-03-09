@@ -8,15 +8,16 @@ let headers = {
   'Content-Type': 'text/plain',
   Accept: 'text/plain'
 }
+const model = new URLSearchParams(window.location.search).get('model')
 const send_msg = (msg) => {
   msg_list.value.push('> ' + msg)
   status.value = 'sending'
   // eslint-disable-next-line no-undef
   axios
     .request({
-      // baseURL: 'http://localhost:5000',
+      baseURL: 'http://localhost:5000',
       method: 'post',
-      url: '/gen_msg',
+      url: '/gen_msg?model=' + model,
       headers: headers,
       data: msg
     })

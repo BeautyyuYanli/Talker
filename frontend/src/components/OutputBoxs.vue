@@ -4,7 +4,7 @@ defineProps(['value'])
 <template>
   <ul>
     <li v-for="(v, idx) in value" :key="idx">
-      <div>{{ v }}</div>
+      <div v-html="v.replace(/\n/g, '<br />')"></div>
     </li>
   </ul>
 </template>

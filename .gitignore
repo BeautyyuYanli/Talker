@@ -1,4 +1,7 @@
 __pycache__/
 .env
 save/*
+!save/default/
+save/default/save.jsonl
+save/default/summary.json
 start.sh

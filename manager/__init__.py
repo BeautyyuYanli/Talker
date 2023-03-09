@@ -12,11 +12,11 @@ class Manager:
         with open(suffix_msg_path, "r") as f:
             self.suffix_msg = json.load(f)
         self.summary_msg_path = summary_msg_path
-        with open(summary_msg_path, "r") as f:
-            try:
+        try:
+            with open(summary_msg_path, "r") as f:
                 self.summary_msg = json.load(f)
-            except:
-                self.summary_msg = None
+        except FileNotFoundError:
+            self.summary_msg = None
         self.save_msg_path = save_msg_path
         self.msg = []
         self.last_completion = None
