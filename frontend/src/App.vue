@@ -15,7 +15,7 @@ const send_msg = (msg) => {
   // eslint-disable-next-line no-undef
   axios
     .request({
-      baseURL: 'http://localhost:5000',
+      // baseURL: 'http://localhost:5000',
       method: 'post',
       url: '/gen_msg?model=' + model,
       headers: headers,
