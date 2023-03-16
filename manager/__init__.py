@@ -72,10 +72,10 @@ class Manager:
             return False
 
     def save(self):
-        with open(self.save_msg_path, "a") as f:
+        with open(self.save_msg_path, "a", encoding="utf-8") as f:
             for msg in self.get_msg():
                 f.write(json.dumps(msg, ensure_ascii=False) + "\n")
-        with open(self.summary_msg_path, "w") as f:
+        with open(self.summary_msg_path, "w", encoding="utf-8") as f:
             f.write(json.dumps(self.get_summary(), ensure_ascii=False))
 
     def gen_msg(self, msg: dict) -> dict:
