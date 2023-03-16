@@ -32,7 +32,7 @@ pool = ManagerPool()
 def gen_msg():
     msg = request.data.decode("utf-8")
     model = request.args.get("model")
-    return pool.get(model).gen_msg({"role": "user", "content": msg}).content
+    return pool.get(model).gen_msg({"role": "user", "content": msg})["content"]
 
 
 @app.route("/save_with_summary", methods=["POST"])
