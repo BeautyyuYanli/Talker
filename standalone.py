@@ -33,4 +33,4 @@ while True:
         manager.save()
         break
     else:
-        print(manager.gen_msg({"role": "user", "content": msg}).content)
+        print(manager.gen_msg({"role": "user", "content": msg})["content"])
