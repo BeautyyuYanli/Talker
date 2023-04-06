@@ -16,11 +16,9 @@ class ManagerPool:
                 except FileNotFoundError:
                     config = {}
 
-                self.pool[key] = Manager(os.getenv("OPENAI_API_KEY"),
-                                         prefix_msg_path=f"save/{key}/prefix.json", suffix_msg_path=f"save/{key}/suffix.json", save_msg_path=f"save/{key}/save.jsonl", config=config)
+                self.pool[key] = Manager(prefix_msg_path=f"save/{key}/prefix.json", suffix_msg_path=f"save/{key}/suffix.json", save_msg_path=f"save/{key}/save.jsonl", config=config)
             except FileNotFoundError:
-                self.pool[key] = Manager(os.getenv("OPENAI_API_KEY"),
-                                         prefix_msg_path=f"save/default/prefix.json", suffix_msg_path=f"save/default/suffix.json", save_msg_path=f"save/default/save.jsonl")
+                self.pool[key] = Manager(prefix_msg_path=f"save/default/prefix.json", suffix_msg_path=f"save/default/suffix.json", save_msg_path=f"save/default/save.jsonl")
         return self.pool[key]
 
     def get_all(self):

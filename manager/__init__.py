@@ -1,11 +1,11 @@
 # import openai
 import requests
 import json
+import os
 
 
 class Manager:
-    def __init__(self, api_key: str, prefix_msg_path: str, suffix_msg_path: str, save_msg_path: str, config: dict = {}) -> None:
-        self.api_key = api_key
+    def __init__(self, prefix_msg_path: str, suffix_msg_path: str, save_msg_path: str, config: dict = {}) -> None:
         with open(prefix_msg_path, "r") as f:
             self.prefix_msg = json.load(f)
         with open(suffix_msg_path, "r") as f:
@@ -25,9 +25,9 @@ class Manager:
         }
         j.update(self.config)
         resp = requests.post(
-            url="https://api.openai.com/v1/chat/completions",
+            url=f"https://{os.getenv('OPENAI_API_BASE')}/v1/chat/completions",
             headers={
-                "Authorization": f"Bearer {self.api_key}",
+                "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}" ,
                 "Content-Type": "application/json"
             },
             json=j
@@ -47,7 +47,7 @@ class Manager:
 
     def get_full_msg(self) -> dict:
         full_msg = self.prefix_msg + \
-            self.msg + self.suffix_msg
+            self.msg[:-1] + self.suffix_msg + self.msg[-1:]
         return full_msg
 
 # public:
