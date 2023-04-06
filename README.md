@@ -7,12 +7,32 @@ Virtual talker powered by GPT-3.5
 ## Setup
 
 ```
-env OPENAI_API_KEY=<your API key> flask -A server:app
+OPENAI_API_KEY=<your API key> flask -A server:app
+```
+
+You can also set your proxy API domain
+```
+OPENAI_API_BASE=<your API base domain, by default api.openai.com> 
 ```
 
 ## Usage
 
 Open http://localhost:5000/?model=default
+
+or run in cmd (need to set env the same as the above): 
+```
+python standalone.py -h
+usage: standalone.py [-h] [--model MODEL]
+
+options:
+  -h, --help     show this help message and exit
+  --model MODEL
+```
+
+or HTTP API:
+```
+curl "http://localhost:5000/gen_msg?model=default" -X POST -d "你好"
+```
 
 ## Advanced
 
