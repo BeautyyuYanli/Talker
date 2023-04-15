@@ -1,7 +1,6 @@
 __pycache__/
 .env
-save/*
-!save/default/
-save/default/save.jsonl
-save/default/summary.json
+models/*
+!models/default.json
+data/
 start.sh
