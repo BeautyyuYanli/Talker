@@ -1,11 +1,13 @@
 from talker.pool import Pool
 from flask import Flask, request, send_from_directory
 from flask_cors import CORS
+import os
 
 
 app = Flask(__name__, static_url_path="/dist")
 CORS(app)
 pool = Pool()
+os.mkdir("data") if not os.path.exists("data") else None
 
 
 @app.route("/new", methods=["GET"])
