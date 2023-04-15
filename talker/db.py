@@ -40,6 +40,7 @@ WHERE
 ) <= {token};
         """
         ).fetchall()
+        res.reverse()
         return [
             {
                 "role": r[1],
