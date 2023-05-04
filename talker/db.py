@@ -1,59 +1,37 @@
-import sqlite3
+import redis
+import os
+import json
+
+conn = redis.Redis.from_url(os.environ.get("KV_URL"))
 
 
 class DB:
     def __init__(self, name: str) -> None:
-        self.con = sqlite3.connect(f"data/{name}.db", check_same_thread=False)
-        self.cur = self.con.cursor()
-        res = self.cur.execute("SELECT name FROM sqlite_master").fetchone()
-        if res is None:
-            self.cur.execute("""
-CREATE TABLE history (
-   id INTEGER PRIMARY KEY AUTOINCREMENT,
-   role TEXT,
-   content TEXT,
-   token INTEGER
-);
-"""
-                             )
+        self.name = name
 
     def add(self, user_msg: dict, comp_msg: dict) -> None:
-        self.cur.execute(
-            "INSERT INTO history (role, content, token) VALUES (?, ?, ?)", (user_msg["role"], user_msg["content"], user_msg["token"]))
-        self.cur.execute(
-            "INSERT INTO history (role, content, token) VALUES (?, ?, ?)", (comp_msg["role"], comp_msg["content"], comp_msg["token"]))
-        self.con.commit()
+        conn.rpush(self.name, json.dumps(user_msg), json.dumps(comp_msg))
 
-    def get_msg(self, token: int) -> list:
-        res = self.cur.execute(
-            f"""
-SELECT *
-FROM 
-(SELECT *
- FROM history 
- ORDER BY id DESC
-) t
-WHERE 
-(SELECT SUM(token) 
- FROM history 
- WHERE id >= t.id
-) <= {token};
-        """
-        ).fetchall()
-        res.reverse()
-        return [
-            {
-                "role": r[1],
-                "content": r[2],
-                "token": r[3]
-            }
-            for r in res
-        ]
+    def get_msg(self, token: int, trim: bool = False) -> list:
+        l = conn.lrange(self.name, 0, -1)
+        l = [json.loads(i) for i in l]
+        # trim
+        trim_b = False
+        total_token = 0
+        for i in range(len(l) - 1, -1, -1):
+            total_token += l[i]["token"]
+            if total_token > token:
+                trim_b = True
+                break
+        if trim_b:
+            l = l[i + 1 :]
+            if trim:
+                conn.ltrim(self.name, i + 1, -1)
+        return l
 
 
 if __name__ == "__main__":
-    db = DB("test")
-    db.add("user", "hello", 1000)
-    db.add("user", "你好", 1000)
-    db.add("user", "hola", 1000)
-    print(db.get_msg(4000))
+    db = DB("test_1")
+    # db.add({"a": 1, "token": 100}, {"b": 2, "token": 200})
+    # db.add({"a": 3, "token": 300}, {"b": 4, "token": 400})
+    print(db.get_msg(1000))
