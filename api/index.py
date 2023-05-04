@@ -4,9 +4,8 @@ from flask_cors import CORS
 import os
 
 
-app = Flask(__name__, static_url_path="/dist")
+app = Flask(__name__)
 CORS(app)
-os.mkdir("data") if not os.path.exists("data") else None
 
 
 def inspect_model(model: str) -> str:

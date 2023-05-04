@@ -2,7 +2,10 @@ import redis
 import os
 import json
 
-conn = redis.Redis.from_url(os.environ.get("KV_URL"))
+kv_url = os.environ.get("KV_URL")
+if os.environ.get("VERCEL"):
+    kv_url = kv_url.replace("redis://", "rediss://")
+conn = redis.Redis.from_url(kv_url)
 
 
 class DB:

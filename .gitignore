@@ -1,6 +1,5 @@
 __pycache__/
+.vercel/
 .env
-models/*
-!models/default.json
-data/
-start.sh
+*.sh
+.vercel
