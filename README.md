@@ -4,6 +4,8 @@ Virtual talker powered by GPT-3.5
 
 Preview: https://talker-beta.vercel.app/  (Powered by Vercel)
 
+![image](https://user-images.githubusercontent.com/32453863/236381761-ee871340-0bf3-4bdb-81b5-e184e0e45f6c.png)
+
 ## Setup
 
 Modify `docker-compose.yml` to set your OpenAI API key.
