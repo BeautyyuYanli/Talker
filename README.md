@@ -6,13 +6,15 @@ Virtual talker powered by GPT-3.5
 
 ## Setup
 
+Modify `docker-compose.yml` to set your OpenAI API key.
+
 ```
-OPENAI_API_KEY=<your API key> flask -A server:app
+- OPENAI_API_KEY=<your-openai-kay>
 ```
 
-You can also set your proxy API domain
+Then 
 ```
-OPENAI_API_BASE=<your API base domain, by default api.openai.com> 
+docker-compose up -d
 ```
 
 ## Usage
@@ -21,18 +23,14 @@ Open http://localhost:5000/?model=default
 
 or HTTP API:
 ```
-curl "http://localhost:5000/gen_msg?model=default" -X POST -d "你好"
+curl "http://localhost:5000/gen_msg?model=default&id=default" -X POST -d "你好"
 ```
 
-## More API
-
-See [server.py](server.py)
+The parama `id` can be any string to identify the `talker`, with its own memory.
 
 ## Advanced
 
 Define your talker in the folder `models/yourmodel.json` and use it by visit http://localhost:5000/?model=yourmodel
-
-The name of the model should not contain underscore.
 
 ## Other
 
