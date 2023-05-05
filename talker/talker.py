@@ -1,7 +1,7 @@
 import requests
 import json
 import os
-from talker.db import DB
+from talker.db.redis import RedisDB
 from threading import Lock
 
 
@@ -17,12 +17,12 @@ class Talker:
         self.prefix_msg = config["prefix"]
         self.suffix_msg = config["suffix"]
         self.config = config.get("api_config", {})
-        self.db = DB(id)
+        self.db = RedisDB(id)
         self.history_token = 3072
         self.lock = Lock()
 
     def update_msg(self):
-        msg = self.db.get_msg(self.history_token, trim=True)
+        msg = self.db.get_msg(self.history_token)
         self.msg = [{"role": r["role"], "content": r["content"]} for r in msg]
         self.total_tokens = sum([r["token"] for r in msg])
 
