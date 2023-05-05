@@ -2,7 +2,7 @@
 
 Virtual talker powered by GPT-3.5
 
-![image](https://user-images.githubusercontent.com/32453863/223974799-603f9673-6ad1-4595-a6ce-b201a83d1cce.png)
+Preview: https://talker-beta.vercel.app/  (Powered by Vercel)
 
 ## Setup
 

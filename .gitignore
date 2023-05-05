@@ -3,3 +3,5 @@ __pycache__/
 .env
 *.sh
 .vercel
+docker-compose.dev.yml
+docker-compose.prod.yml
