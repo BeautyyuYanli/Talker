@@ -19,7 +19,7 @@ def inspect_model(model: str) -> str:
 
 @app.route("/gen_msg", methods=["POST"])
 def gen_msg():
-    if os.getenv("TALKER_TOKEN") and request.headers.get("Authorization") != os.getenv(
+    if os.getenv("TALKER_TOKEN") and request.headers.get("X-TALKER-TOKEN") != os.getenv(
         "TALKER_TOKEN"
     ):
         return "Unauthorized", 401
