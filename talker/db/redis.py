@@ -10,7 +10,7 @@ conn = redis.Redis.from_url(kv_url)
 
 class RedisDB(DB):
     def add(self, user_msg: Dict[str, Any], comp_msg: Dict[str, Any]) -> None:
-        conn.rpush(self.id, json.dumps(user_msg), json.dumps(comp_msg))
+        conn.rpush(self.id, json.dumps(user_msg, ensure_ascii=False), json.dumps(comp_msg, ensure_ascii=False))
 
     def get_msg(self, token: int, trim: bool = True) -> List[Dict[str, Any]]:
         l = conn.lrange(self.id, 0, -1)

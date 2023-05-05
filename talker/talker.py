@@ -3,6 +3,9 @@ import json
 import os
 from talker.db.redis import RedisDB
 from threading import Lock
+from typing import Dict 
+
+locks: Dict[str, Lock] = dict({})
 
 
 class Talker:
@@ -17,9 +20,11 @@ class Talker:
         self.prefix_msg = config["prefix"]
         self.suffix_msg = config["suffix"]
         self.config = config.get("api_config", {})
-        self.db = RedisDB(id)
+        self.id = id
         self.history_token = 3072
-        self.lock = Lock()
+        self.db = RedisDB(id)
+        if locks.get(id) is None:
+            locks[id] = Lock()
 
     def update_msg(self):
         msg = self.db.get_msg(self.history_token)
@@ -55,7 +60,7 @@ class Talker:
     # public:
 
     def gen_msg(self, user_msg: dict) -> dict:
-        self.lock.acquire()
+        locks[self.id].acquire()
         self.update_msg()
         try:
             completion = self.gen_completion(user_msg)
@@ -73,5 +78,5 @@ class Talker:
         except Exception as e:
             print("Error: ", e)
             comp_msg = {"role": "program", "content": "Error: " + str(e)}
-        self.lock.release()
+        locks[self.id].release()
         return comp_msg
