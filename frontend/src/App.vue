@@ -4,11 +4,8 @@ import OutputBoxs from './components/OutputBoxs.vue'
 import InputBottom from './components/InputBottom.vue'
 let status = ref('stopped')
 let msg_list = ref([])
-let headers = {
-  'Content-Type': 'text/plain',
-  Accept: 'text/plain'
-}
 const model = new URLSearchParams(window.location.search).get('model')
+const token = new URLSearchParams(window.location.search).get('token')
 const send_msg = (msg) => {
   msg_list.value.push('> ' + msg)
   status.value = 'sending'
@@ -18,7 +15,11 @@ const send_msg = (msg) => {
       // baseURL: 'http://localhost:5000',
       method: 'post',
       url: '/gen_msg?model=' + model,
-      headers: headers,
+      headers: {
+        'Content-Type': 'text/plain',
+        'Accept': 'text/plain',
+        'X-TALKER-TOKEN': token
+      },
       data: msg
     })
     .then((res) => {
