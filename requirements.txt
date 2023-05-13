@@ -1,4 +1,4 @@
-openai
+openai>=0.26
 flask
 flask-cors
 redis
