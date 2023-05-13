@@ -12,5 +12,9 @@ class DB:
         pass
 
     @abstractmethod
+    def clear(self) -> None:
+        pass
+
+    @abstractmethod
     def get_msg(self, token: int, trim: bool = False) -> List[Dict[str, Any]]:
         pass

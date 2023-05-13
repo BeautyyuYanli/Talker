@@ -31,6 +31,20 @@ def gen_msg():
     return Talker(model, id).gen_msg({"role": "user", "content": msg})["content"]
 
 
+@app.route("/clear", methods=["GET"])
+def clear():
+    if os.getenv("TALKER_TOKEN") and request.headers.get("X-TALKER-TOKEN") != os.getenv(
+        "TALKER_TOKEN"
+    ):
+        return "Unauthorized", 401
+    model = request.args.get("model", None)
+    model = inspect_model(model)
+    id = request.args.get("id", "default")
+    id = f"{model}_{id}"
+    Talker(model, id).clear()
+    return "OK"
+
+
 @app.route("/")
 def index():
     return send_from_directory("../frontend/dist", "index.html")
