@@ -5,4 +5,4 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt waitress
 
 COPY . .
-CMD [ "python", "-m", "waitress", "index:app" ]
+CMD [ "python", "-m", "waitress", "api.index:app" ]
