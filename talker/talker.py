@@ -20,6 +20,7 @@ class Talker:
         self.config = config.get("api_config", {})
         self.id = id
         self.history_token = 3072
+        self.db = RedisDB(id)
 
     def update_msg(self):
         msg = self.db.get_msg(self.history_token)
