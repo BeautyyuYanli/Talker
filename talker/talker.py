@@ -5,6 +5,8 @@ from talker.db.redis import RedisDB
 from threading import Lock
 from typing import Dict
 
+BALANCE_TOKEN = 3072
+
 
 class Talker:
     def __init__(self, model: str, id: str) -> None:
@@ -19,7 +21,7 @@ class Talker:
         self.suffix_msg = config["suffix"]
         self.config = config.get("api_config", {})
         self.id = id
-        self.history_token = 3072
+        self.history_token = BALANCE_TOKEN
         self.db = RedisDB(id)
 
     def update_msg(self):
