@@ -37,7 +37,7 @@ class Talker:
         }
         j.update(self.config)
         resp = requests.post(
-            url=f"https://{os.getenv('OPENAI_API_BASE') if os.getenv('OPENAI_API_BASE') else 'api.openai.com'}/v1/chat/completions",
+            url=f"{os.getenv('OPENAI_API_BASE') if os.getenv('OPENAI_API_BASE') else 'https://api.openai.com'}/v1/chat/completions",
             headers={
                 "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}",
                 "Content-Type": "application/json",
